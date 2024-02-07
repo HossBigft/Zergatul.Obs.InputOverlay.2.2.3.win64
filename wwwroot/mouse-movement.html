@@ -33,14 +33,6 @@
         // resulting speed multiplied by this value
         // change this if you change DPI
         const speedFactor = 1;
-
-        // highlights neighbours elements, but with smaller intencity
-        // affects x2 neighbours (in both directions)
-        const affectedNeighbours = 0;
-
-        // must be greater than 1, affects how intence neighbour will be highlighted
-        // greater value - less intence
-        const blurOnNeighbourFadeFactor = 0;
     </script>
     <style>
         body {
@@ -206,14 +198,7 @@
             let element = getElementByIndex(index);
             addIntensity(element, deltaIntensity);
 
-            let neighbourFadeValue = blurOnNeighbourFadeFactor;
-            for (let i = 1; i <= affectedNeighbours; i++) {
-                let element1 = getElementByIndex(index - i);
-                let element2 = getElementByIndex(index + i);
-                addIntensity(element1, deltaIntensity / neighbourFadeValue);
-                addIntensity(element2, deltaIntensity / neighbourFadeValue);
-                neighbourFadeValue *= blurOnNeighbourFadeFactor;
-            }
+
 
             /* apply intensity value to elements style */
 
