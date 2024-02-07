@@ -18,10 +18,7 @@
         const gradientTable = [
             // red/green/blue [0..256), opacity [0..1], intensity
             { red: 45, green: 100, blue: 38, opacity: 0.0, intensity: 0.0 },
-            { red: 45, green: 100, blue: 38, opacity: 1.0, intensity: 0.3 }, // from 0% to 30% - green
-            { red: 255, green: 225, blue: 61, opacity: 1.0, intensity: 0.5 }, // at 50% becomes yellow
-            { red: 255, green: 61, blue: 61, opacity: 1.0, intensity: 0.8 }, // at 80% becomes red
-            { red: 255, green: 61, blue: 61, opacity: 1.0, intensity: 1.0 }, // and stays the same to 100%
+            { red: 45, green: 100, blue: 38, opacity: 1.0, intensity: 1 }, // from 0% to 30% - green
 
             // single color example below
             // uncomment lines below to use it, and remove above lines
@@ -35,7 +32,7 @@
 
         // resulting speed multiplied by this value
         // change this if you change DPI
-        const speedFactor = 0.00001;
+        const speedFactor = 1;
 
         // highlights neighbours elements, but with smaller intencity
         // affects x2 neighbours (in both directions)
