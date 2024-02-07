@@ -36,11 +36,11 @@
 
         // highlights neighbours elements, but with smaller intencity
         // affects x2 neighbours (in both directions)
-        const affectedNeighbours = 1;
+        const affectedNeighbours = 0;
 
         // must be greater than 1, affects how intence neighbour will be highlighted
         // greater value - less intence
-        const blurOnNeighbourFadeFactor = 2;
+        const blurOnNeighbourFadeFactor = 0;
     </script>
     <style>
         body {
@@ -176,7 +176,7 @@
             let fadeValue = Math.pow(fadeFactor, deltaTime);
             for (let i = 0; i < elementsCount; i++) {
                 if (elements[i].intensity > 0) {
-                    elements[i].intensity = elements[i].intensity / fadeValue;
+                    elements[i].intensity = 0;
                     if (elements[i].intensity < 0.001) {
                         elements[i].intensity = 0;
                     }
