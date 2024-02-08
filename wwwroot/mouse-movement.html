@@ -5,7 +5,7 @@
     <script>
         const circleRadius = 320; // pixels
         const circlePadding = 20; // pixels
-        const elementsCount = 30; // more elements reduce performance
+        const elementsCount = 360; // more elements reduce performance
         const elementWidth = 48; // pixels
         const elementHeight = 24; // pixels
 
@@ -186,8 +186,8 @@
             }
 
             queue.splice(0, queue.length);
-
-            let angle = Math.atan(dx, dy);
+            let sens=0.002
+            let angle = Math.atan(dx*sens, dy*sens);
             console.log("dy", dy, 'dx', dx, "angle",angle)
             if(lastAngle===null){
                 lastAngle=angle
