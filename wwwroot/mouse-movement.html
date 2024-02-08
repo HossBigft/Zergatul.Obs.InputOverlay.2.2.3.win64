@@ -155,6 +155,7 @@
         }
 
         let lastTimestamp = null;
+        let lastAngle = null
         function animate(timestamp) {
             if (lastTimestamp == null) {
                 lastTimestamp = timestamp;
@@ -186,9 +187,25 @@
 
             queue.splice(0, queue.length);
 
-            let angle = Math.atan2(dy, dx);
-            let index = Math.round(angle / (2 * Math.PI / elementsCount));
+            let angle = Math.atan(dx, dy);
+            console.log("dy", dy, 'dx', dx, "angle",angle)
+            if(lastAngle===null){
+                lastAngle=angle
+            } else{
+                lastAngle+=angle
+                while (lastAngle>2*Math.PI) {
+                    lastAngle-=2*Math.PI
+                }
+                while (lastAngle<0) {
+                    lastAngle+=2*Math.PI
+            }
+                
+                
 
+            }
+            console.log(lastAngle)
+            let index = Math.round(lastAngle / (2 * Math.PI / elementsCount));
+            console.log('index', index)
             let speed = 1000 * Math.sqrt(dx * dx + dy * dy) / deltaTime;
             let deltaIntensity = speed * speedFactor;
             if (deltaIntensity > 1) {
