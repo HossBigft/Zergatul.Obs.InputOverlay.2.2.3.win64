@@ -8,6 +8,7 @@
         const elementsCount = 360; // more elements reduce performance
         const elementWidth = 48; // pixels
         const elementHeight = 24; // pixels
+        let sens=0.0007
 
         // internally every element has "intensity" value
         // this table is used to map intensity from range [0..1] to some colors
@@ -156,6 +157,7 @@
 
         let lastTimestamp = null;
         let lastAngle = null
+        let lastIndex = null
         function animate(timestamp) {
             if (lastTimestamp == null) {
                 lastTimestamp = timestamp;
@@ -165,17 +167,6 @@
 
             let deltaTime = timestamp - lastTimestamp;
 
-            /* decrease brightness of all items */
-            let fadeValue = Math.pow(fadeFactor, deltaTime);
-            for (let i = 0; i < elementsCount; i++) {
-                if (elements[i].intensity > 0) {
-                    elements[i].intensity = 0;
-                    if (elements[i].intensity < 0.001) {
-                        elements[i].intensity = 0;
-                    }
-                    elements[i].changed = true;
-                }
-            }
 
             /* calculate sum of movements */
             let dx = 0;
@@ -186,7 +177,6 @@
             }
 
             queue.splice(0, queue.length);
-            let sens=0.002
             let angle = Math.atan(dx*sens, dy*sens);
             console.log("dy", dy, 'dx', dx, "angle",angle)
             if(lastAngle===null){
@@ -198,13 +188,13 @@
                 }
                 while (lastAngle<0) {
                     lastAngle+=2*Math.PI
-            }
-                
-                
-
+                }
             }
             console.log(lastAngle)
             let index = Math.round(lastAngle / (2 * Math.PI / elementsCount));
+            if(lastIndex===null){
+                lastIndex=index
+            }
             console.log('index', index)
             let speed = 1000 * Math.sqrt(dx * dx + dy * dy) / deltaTime;
             let deltaIntensity = speed * speedFactor;
@@ -215,7 +205,15 @@
             let element = getElementByIndex(index);
             addIntensity(element, deltaIntensity);
 
-
+            if (lastIndex!==index){
+                /* decrease brightness of all items */
+                for (let i = 0; i < elementsCount; i++) {
+                    if (elements[i].intensity > 0 && i!==index) {
+                        elements[i].intensity = 0;
+                        elements[i].changed = true;
+                    }
+                }
+            }
 
             /* apply intensity value to elements style */
 
@@ -227,7 +225,8 @@
                     elements[i].changed = false;
                 }
             }
-
+            
+            lastIndex=index
             lastTimestamp = timestamp
             window.requestAnimationFrame(animate);
         }
