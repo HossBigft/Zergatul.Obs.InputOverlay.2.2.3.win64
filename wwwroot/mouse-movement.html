@@ -6,8 +6,8 @@
         const circleRadius = 320; // pixels
         const circlePadding = 20; // pixels
         const elementsCount = 360; // more elements reduce performance
-        const elementWidth = 48; // pixels
-        const elementHeight = 24; // pixels
+        const elementWidth = 70; // pixels
+        const elementHeight = 70; // pixels
         let sens=0.0007
 
         // internally every element has "intensity" value
@@ -19,7 +19,7 @@
         const gradientTable = [
             // red/green/blue [0..256), opacity [0..1], intensity
             { red: 45, green: 100, blue: 38, opacity: 0.0, intensity: 0.0 },
-            { red: 45, green: 100, blue: 38, opacity: 1.0, intensity: 1 }, // from 0% to 30% - green
+            { red: 1, green: 1, blue: 1, opacity: 1.0, intensity: 1 }, // from 0% to 30% - green
 
             // single color example below
             // uncomment lines below to use it, and remove above lines
@@ -44,7 +44,7 @@
         }
         div.element {
             border-radius: 50%;
-            border: 2px solid white;
+            border: 35px solid white;
             position: absolute;
         }
     </style>
