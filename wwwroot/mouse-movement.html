@@ -42,11 +42,14 @@
             padding: 0;
             overflow: hidden;
         }
+        div.wrapper {
+            display: inline-block;
+        }
         div.indicator {
             border-radius: 50%;
             background-color: black;
             border: 35px solid white;
-            transform-origin: 3cm 3cm;
+            transform-origin: 6cm 6cm;
         }
     </style>
     <script>
@@ -111,22 +114,21 @@
             }
 
             queue.splice(0, queue.length);
-            let angle = Math.atan(dx*sens, dy*sens);
-            let elem = document.querySelector('.indicator');
+            let angle = (Math.atan(dx*sens, dy*sens)*180)/Math.PI;
             console.log("dy", dy, 'dx', dx, "angle",angle)
             if(lastAngle===null){
                 lastAngle=angle
             } else{
                 lastAngle+=angle
-                while (lastAngle>2*Math.PI) {
-                    lastAngle-=2*Math.PI
+                while (lastAngle>360) {
+                    lastAngle-=360
                 }
                 while (lastAngle<0) {
-                    lastAngle+=2*Math.PI
+                    lastAngle+=360
                 }
             }
-            let lastAngleDegrees=(lastAngle*180)/Math.PI
-            elem.style.transform="rotate("+lastAngleDegrees+"deg)"
+            let elem = document.querySelector('.indicator');
+            elem.style.transform="rotate("+(lastAngle+45)+"deg)"
             console.log(lastAngle)
 
             lastTimestamp = timestamp
