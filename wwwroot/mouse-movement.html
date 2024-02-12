@@ -5,7 +5,6 @@
     <script>
         const circleRadius = 320; // pixels
         const circlePadding = 20; // pixels
-        const elementsCount = 360; // more elements reduce performance
         const elementWidth = 70; // pixels
         const elementHeight = 70; // pixels
         let sens=0.00087
@@ -43,35 +42,17 @@
             padding: 0;
             overflow: hidden;
         }
-        div.element {
+        div.indicator {
             border-radius: 50%;
+            background-color: black;
             border: 35px solid white;
-            position: absolute;
+            transform-origin: 3cm 3cm;
         }
     </style>
     <script>
-        const elements = new Array(elementsCount);
         const queue = new Array();
         const colorMap = new Array(1001);
         const opacityMap = new Array(1001);
-
-        function getElementByIndex(index) {
-            while (index < 0) {
-                index += elementsCount;
-            }
-            while (index >= elementsCount) {
-                index -= elementsCount;
-            }
-            return elements[index];
-        }
-
-        function addIntensity(element, value) {
-            element.intensity += value;
-            if (element.intensity > 1) {
-                element.intensity = 1;
-            }
-            element.changed = true;
-        }
 
         function listenWebSocket() {
             let ws = new WebSocket('ws://' + location.host + '/ws');
@@ -96,64 +77,16 @@
         }
 
         function buildCircle() {
-            for (let i = 0; i < elementsCount; i++) {
-                let angle = 2 * Math.PI * i / elementsCount;
-                let div = document.createElement('div');
-                div.classList.add('element');
-                div.style.opacity = 0;
-                div.style.width = elementWidth + 'px';
-                div.style.height = elementHeight + 'px';
-                div.style.left = (circlePadding + circleRadius + Math.cos(angle) * circleRadius).toFixed(3) + 'px';
-                div.style.top = (circlePadding + circleRadius + Math.sin(angle) * circleRadius).toFixed(3) + 'px';
-                div.style.transform = 'rotate(' + (90 + 360 * i / elementsCount).toFixed(3) + 'deg)';
-                document.body.appendChild(div);
+            let wrapper = document.createElement('div');
+            wrapper.classList.add('wrapper');
+            document.body.appendChild(wrapper);
 
-                elements[i] = {
-                    div: div,
-                    intensity: 0,
-                    changed: false
-                };
-            }
-        }
-
-        function buildGradientTable() {
-            let hex = function (val) {
-                if (val < 0) {
-                    val = 0;
-                }
-                if (val >= 256) {
-                    val = 255;
-                }
-                if (val < 16) {
-                    return '0' + val.toString(16);
-                } else {
-                    return val.toString(16);
-                }
-            };
-            let tableIndex = 0;
-            for (let i = 0; i <= 1000; i++) {
-                if (i / 1000 >= gradientTable[tableIndex].intensity) {
-                    tableIndex++;
-                }
-                let curr = gradientTable[tableIndex - 1];
-                let next = gradientTable[tableIndex];
-                if (!next) {
-                    next = curr;
-                }
-                let delta = next.intensity - curr.intensity;
-                if (delta == 0) {
-                    colorMap[i] = '#' + hex(curr.red) + hex(curr.green) + hex(curr.blue);
-                    opacityMap[i] = Math.round(curr.opacity * 1000) / 1000;
-                } else {
-                    let factor = (i / 1000 - curr.intensity) / delta;
-                    let r = curr.red + Math.round((next.red - curr.red) * factor);
-                    let g = curr.green + Math.round((next.green - curr.green) * factor);
-                    let b = curr.blue + Math.round((next.blue - curr.blue) * factor);
-                    let o = curr.opacity + (next.opacity - curr.opacity) * factor;
-                    colorMap[i] = '#' + hex(r) + hex(g) + hex(b);
-                    opacityMap[i] = Math.round(o * 1000) / 1000;
-                }
-            }
+            let div = document.createElement('div');
+            div.classList.add('indicator');
+            div.style.width = elementWidth + 'px';
+            div.style.height = elementHeight + 'px';
+            document.getElementsByClassName("wrapper")[0].appendChild(div);
+ 
         }
 
         let lastTimestamp = null;
@@ -179,6 +112,7 @@
 
             queue.splice(0, queue.length);
             let angle = Math.atan(dx*sens, dy*sens);
+            let elem = document.querySelector('.indicator');
             console.log("dy", dy, 'dx', dx, "angle",angle)
             if(lastAngle===null){
                 lastAngle=angle
@@ -191,50 +125,16 @@
                     lastAngle+=2*Math.PI
                 }
             }
+            let lastAngleDegrees=(lastAngle*180)/Math.PI
+            elem.style.transform="rotate("+lastAngleDegrees+"deg)"
             console.log(lastAngle)
-            let index = Math.round(lastAngle / (2 * Math.PI / elementsCount));
-            if(lastIndex===null){
-                lastIndex=index
-            }
-            console.log('index', index)
-            let speed = 1000 * Math.sqrt(dx * dx + dy * dy) / deltaTime;
-            let deltaIntensity = speed * speedFactor;
-            if (deltaIntensity > 1) {
-                deltaIntensity = 1;
-            }
 
-            let element = getElementByIndex(index);
-            addIntensity(element, deltaIntensity);
-
-            if (lastIndex!==index){
-                /* decrease brightness of all items */
-                for (let i = 0; i < elementsCount; i++) {
-                    if (elements[i].intensity > 0 && i!==index) {
-                        elements[i].intensity = 0;
-                        elements[i].changed = true;
-                    }
-                }
-            }
-
-            /* apply intensity value to elements style */
-
-            for (let i = 0; i < elementsCount; i++) {
-                if (elements[i].changed) {
-                    let index = Math.round(elements[i].intensity * 1000);
-                    elements[i].div.style.backgroundColor = colorMap[index];
-                    elements[i].div.style.opacity = opacityMap[index];
-                    elements[i].changed = false;
-                }
-            }
-            
-            lastIndex=index
             lastTimestamp = timestamp
             window.requestAnimationFrame(animate);
         }
 
         document.addEventListener('DOMContentLoaded', function() {
             buildCircle();
-            buildGradientTable();
             listenWebSocket();
             window.requestAnimationFrame(animate);
         });
