@@ -44,12 +44,14 @@
         }
         div.wrapper {
             display: inline-block;
+            margin-top: 6cm;
+            margin-left: 6cm;
         }
         div.indicator {
             border-radius: 50%;
             background-color: black;
             border: 35px solid white;
-            transform-origin: 6cm 6cm;
+            transform-origin: 4cm 4cm;
         }
     </style>
     <script>
@@ -83,11 +85,11 @@
             let wrapper = document.createElement('div');
             wrapper.classList.add('wrapper');
             document.body.appendChild(wrapper);
-
             let div = document.createElement('div');
             div.classList.add('indicator');
             div.style.width = elementWidth + 'px';
             div.style.height = elementHeight + 'px';
+
             document.getElementsByClassName("wrapper")[0].appendChild(div);
  
         }
