@@ -92,6 +92,31 @@
                 }
             };
         }
+        function createCompass() {
+            letters = ['N','NE', 'E', 'SE', 'S', 'SW', 'W', 'NW']
+            let compasContainter = document.createElement('ul');
+            compasContainter.classList.add('compas-container');
+            document.body.appendChild(compasContainter);
+
+            const container = document.querySelector('.compas-container');
+            const radius = container.offsetWidth/2;
+            const rotation = 360/letters.length;
+
+            for (letter in letters){
+                let compasItem = document.createElement('li');
+                compasItem.classList.add('compas-item');
+                document.getElementsByClassName("compas-container")[0].appendChild(compasItem);
+
+                let compasItemContent = document.createElement('span')
+                compasItemContent.classList.add('compas-info');
+                document.getElementsByClassName("compas-item")[document.getElementsByClassName("compas-item").length-1].appendChild(compasItemContent);
+
+                const rotationValue = `rotate(${letter*rotation}deg) translate(${radius}px) rotate(-${letter*rotation}deg)`;
+                document.getElementsByClassName("compas-item")[document.getElementsByClassName("compas-item").length-1].style.transform=rotationValue
+                document.getElementsByClassName("compas-info")[document.getElementsByClassName("compas-info").length-1].innerHTML = letters[letter]
+            }
+            return compasContainter
+        }
 
         function buildCircle() {
             let wrapper = document.createElement('div');
@@ -105,7 +130,7 @@
             center.classList.add('center');
             document.getElementsByClassName("wrapper")[0].appendChild(div);
             document.getElementsByClassName("wrapper")[0].appendChild(center);
- 
+            document.getElementsByClassName("wrapper")[0].appendChild(createCompass())
         }
 
         let lastTimestamp = null;
