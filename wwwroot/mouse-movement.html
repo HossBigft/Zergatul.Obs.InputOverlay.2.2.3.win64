@@ -62,9 +62,35 @@
             background-color: red;
             border: 5px solid red;
             height: 5px;
-            width: 5px;
-
+            width: 5px; 
         }
+        
+        .compas-container{
+            position: relative;
+            height: 700px;
+            width: 700px;
+            top: -20.25cm;
+            left: 0.5cm;
+            list-style-type: none;
+            border: 0px solid var(--bg);
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            transform: rotate(-90deg);
+          }
+          .compas-item {
+            position: absolute;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+          }
+          .compas-info {
+            transform: rotate(90deg);
+            font: 2.5rem helvetica,sans-serif;
+            color: var(--bg);
+          }
     </style>
     <script>
         const queue = new Array();
@@ -130,7 +156,7 @@
             center.classList.add('center');
             document.getElementsByClassName("wrapper")[0].appendChild(div);
             document.getElementsByClassName("wrapper")[0].appendChild(center);
-            document.getElementsByClassName("wrapper")[0].appendChild(createCompass())
+            document.body.appendChild(createCompass())
         }
 
         let lastTimestamp = null;
